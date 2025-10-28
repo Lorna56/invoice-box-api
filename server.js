@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/invoicebox', {
+mongoose.connect(process.env.MONGODB_URI || '', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -24,7 +24,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/invoicebo
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
-  console.log('Connected to MongoDB');
+  console.log('Connected to your invoice-box database succesfully');
 });
 
 // Routes

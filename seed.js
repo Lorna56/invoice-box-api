@@ -5,7 +5,7 @@ const Payment = require('./models/Payment');
 require('dotenv').config();
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/invoicebox', {
+mongoose.connect(process.env.MONGODB_URI || '', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -18,7 +18,7 @@ const seedData = async () => {
     await Payment.deleteMany({});
 
     // Create providers
-    const providers = await User.insertMany([
+    const providers = await User.create([
       {
         name: 'John Provider',
         email: 'john@provider.com',
@@ -40,7 +40,7 @@ const seedData = async () => {
     ]);
 
     // Create purchasers
-    const purchasers = await User.insertMany([
+    const purchasers = await User.create([
       {
         name: 'Alice Purchaser',
         email: 'alice@purchaser.com',

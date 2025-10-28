@@ -36,9 +36,17 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+// // Compare password method
+// userSchema.methods.comparePassword = async function (password) {
+//   return await bcrypt.compare(password, this.password);
+// };
 // Compare password method
 userSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
+  console.log("Comparing entered password:", password);
+  console.log("Against stored hash:", this.password);
+  const isMatch = await bcrypt.compare(password, this.password);
+  console.log("Result of comparison:", isMatch);
+  return isMatch;
 };
 
 module.exports = mongoose.model('User', userSchema);
