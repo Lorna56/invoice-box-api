@@ -5,6 +5,7 @@ const {
   getSystemStats,
 } = require('../controllers/adminController');
 const { admin } = require('../middleware/admin');
+const { getActivityLog } = require('../controllers/adminController'); // <-- Import
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.use(admin);
 router.route('/users').get(getAllUsers);
 router.route('/invoices').get(getAllInvoices);
 router.route('/stats').get(getSystemStats);
+router.route('/activity').get(getActivityLog); // <-- Add new route
 
 module.exports = router;
