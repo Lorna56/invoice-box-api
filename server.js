@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const invoiceRoutes = require('./routes/invoices');
 const paymentRoutes = require('./routes/payments');
+const adminRoutes = require('./routes/admin'); // <-- IMPORT ADMIN ROUTES
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes); // <-- USE ADMIN ROUTES
 
 // Error handling middleware
 app.use((err, req, res, next) => {

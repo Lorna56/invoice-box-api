@@ -60,6 +60,14 @@ const seedData = async () => {
         role: 'purchaser',
       },
     ]);
+    const admin = await User.create({
+  name: 'Super Admin',
+  email: 'admin@invoicebox.com',
+  password: 'admin123', // Use a simple password for seeding
+  role: 'admin',
+});
+
+console.log('Admin user created: admin@invoicebox.com / admin123');
 
     // Create invoices
     const invoices = await Invoice.insertMany([
