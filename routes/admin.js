@@ -3,18 +3,34 @@ const {
   getAllUsers,
   getAllInvoices,
   getSystemStats,
+  updateUserStatus,
+  deleteUser,
+  getActivityLog
 } = require('../controllers/adminController');
-const { admin } = require('../middleware/admin');
-const { getActivityLog } = require('../controllers/adminController'); // <-- Import
+const { protect, admin } = require('../middleware/admin');
 
 const router = express.Router();
 
-// All routes in this file are protected and require admin role
+// Apply both protect and admin middleware to all routes
+router.use(protect);
 router.use(admin);
 
-router.route('/users').get(getAllUsers);
-router.route('/invoices').get(getAllInvoices);
-router.route('/stats').get(getSystemStats);
-router.route('/activity').get(getActivityLog); // <-- Add new route
+// Get all users
+router.get('/users', getAllUsers);
+
+// Update user status
+router.put('/users/:id', updateUserStatus);
+
+// Delete user
+router.delete('/users/:id', deleteUser);
+
+// Get all invoices
+router.get('/invoices', getAllInvoices);
+
+// Get system stats
+router.get('/stats', getSystemStats);
+
+// Get activity logs
+router.get('/activity', getActivityLog);
 
 module.exports = router;

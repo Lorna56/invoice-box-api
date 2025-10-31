@@ -33,7 +33,11 @@ const createPayment = async (req, res) => {
       await invoiceExists.save();
     }
     
-    res.status(201).json(payment);
+    // Fixed: Changed newPayment to payment
+    res.status(201).json({
+      message: 'Payment recorded successfully!',
+      payment: payment
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });
@@ -74,7 +78,38 @@ const getUserPayments = async (req, res) => {
   }
 };
 
+// @desc    Get all payments for the logged-in user
+// @route   GET /api/payments/my
+// @access  Private
+const getMyPayments = async (req, res) => {
+  try {
+    const payments = await Payment.find({})
+      .populate({
+        path: 'invoice',
+        populate: [
+          { path: 'provider', select: 'name email' },
+          { path: 'purchaser', select: 'name email' }
+        ]
+      })
+      .sort({ paymentDate: -1 });
+    
+    // Filter payments based on user role
+    const { user } = req;
+    let filteredPayments = payments;
+    if (user.role === 'provider') {
+      filteredPayments = payments.filter(p => p.invoice.provider._id.toString() === user._id.toString());
+    } else if (user.role === 'purchaser') {
+      filteredPayments = payments.filter(p => p.invoice.purchaser._id.toString() === user._id.toString());
+    }
+    
+    res.json(filteredPayments);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createPayment,
   getUserPayments,
+  getMyPayments,
 };

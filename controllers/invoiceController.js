@@ -24,8 +24,9 @@ const getInvoices = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// Get invoice by ID
+// @desc    Get invoice by ID
+// @route   GET /api/invoices/:id
+// @access  Private
 const getInvoiceById = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id)
@@ -34,9 +35,11 @@ const getInvoiceById = async (req, res) => {
     
     if (invoice) {
       // Check if user is authorized to view this invoice
+      const { user } = req;
       if (
-        invoice.provider._id.toString() === req.user._id.toString() ||
-        invoice.purchaser._id.toString() === req.user._id.toString()
+        invoice.provider._id.toString() === user._id.toString() ||
+        invoice.purchaser._id.toString() === user._id.toString() ||
+        user.role === 'admin' // <-- ADD THIS CHECK FOR ADMINS
       ) {
         res.json(invoice);
       } else {
@@ -50,6 +53,7 @@ const getInvoiceById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Create a new invoice
 const createInvoice = async (req, res) => {
@@ -86,11 +90,14 @@ const createInvoice = async (req, res) => {
       dueDate,
     });
     
-    const populatedInvoice = await Invoice.findById(invoice._id)
+   const populatedInvoice = await Invoice.findById(invoice._id)
       .populate('provider', 'name email')
       .populate('purchaser', 'name email');
     
-    res.status(201).json(populatedInvoice);
+    res.status(201).json({
+      message: 'Invoice created successfully!',
+      invoice: populatedInvoice
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });
