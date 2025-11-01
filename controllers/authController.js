@@ -151,7 +151,8 @@ const forgotPassword = async (req, res) => {
       expiresAt: Date.now() + 10 * 60 * 1000, // Token expires in 10 minutes
     });
 
-    const resetUrl = `http://localhost:3000/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
     
     // THIS IS THE KEY PART FOR OUR DEMO
     console.log('===== PASSWORD RESET LINK =====');
